@@ -64,7 +64,7 @@ const ShowCard = ({ show }) => (
       </h5>
       <div>{show.genres && show.genres.map(genrePill)}</div>
       <p
-        assName="card-text mt-2"
+        className="card-text mt-2"
         dangerouslySetInnerHTML={{ __html: show.summary }}
       />
       {link(show.officialSite)}

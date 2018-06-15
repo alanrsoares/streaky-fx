@@ -1,16 +1,28 @@
 import React from "react";
 
-import { compose } from "ramda";
+import { compose, map, filter } from "ramda";
 
 import * as $fx from "../../StreakyFx";
 
 import tvService from "./TVService";
-
 import ShowCard from "./ShowCard";
+
+const refineSearchResults = compose(
+  filter(show => show.summary && show.image),
+  map(x => x.show)
+);
+
+function renderResultsHeading(searchTerm, shows) {
+  const len = shows.length;
+
+  return len
+    ? `${len} show${len > 1 ? "s" : ""} found`
+    : `no results for "${searchTerm}"`;
+}
 
 export default class TVSearch extends React.Component {
   state = {
-    searchResults: [],
+    shows: [],
     searchTerm: "",
     isSearching: false
   };
@@ -20,10 +32,10 @@ export default class TVSearch extends React.Component {
     $fx.map(e => {
       const term = e.target.value;
       if (!term && !this.state.isSearching) {
-        this.setState({ searchResults: [], searchTerm: "" });
+        this.setState({ shows: [], searchTerm: "" });
       }
       return term;
-    }), // pluck the input value
+    }), // plucks the input value
     $fx.filter(term => term.length >= 3) // rejects values with length 2 or less
   )(searchTerm => {
     console.log(`searching "${searchTerm}"`);
@@ -31,31 +43,19 @@ export default class TVSearch extends React.Component {
     this.setState({
       searchTerm,
       isSearching: true,
-      searchResults: []
+      shows: []
     });
 
     tvService.searchShows(searchTerm).then(xs =>
       this.setState({
-        searchResults: xs,
+        shows: refineSearchResults(xs),
         isSearching: false
       })
     );
   });
 
   renderSearchResults() {
-    const { searchTerm, searchResults, isSearching } = this.state;
-
-    const shows = searchResults
-      .map(s => s.show)
-      .filter(show => show.summary && show.image);
-
-    function heading(searchTerm, searchResults) {
-      const len = searchResults.length;
-
-      return len
-        ? `${len} show${len > 1 ? "s" : ""} found`
-        : `no results for "${searchTerm}"`;
-    }
+    const { searchTerm, shows, isSearching } = this.state;
 
     if (!searchTerm || isSearching) {
       return;
@@ -63,7 +63,7 @@ export default class TVSearch extends React.Component {
 
     return (
       <div className="result-container">
-        <h1 className="h4">{heading(searchTerm, searchResults)}</h1>
+        <h1 className="h4">{renderResultsHeading(searchTerm, shows)}</h1>
         <div style={{ overflowX: "scroll" }}>
           <div className="d-inline-flex p-2">
             {shows.map(show => <ShowCard show={show} />)}

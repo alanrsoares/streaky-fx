@@ -1,10 +1,5 @@
 export const map = (predicate: Event => any) => handler => {
-  return (event: Event) => {
-    if (event.persist) {
-      event.persist();
-    }
-    handler(predicate(event));
-  };
+  return (event: Event) => handler(predicate(event));
 };
 
 export const filter = (predicate: Event => boolean) => handler => {
