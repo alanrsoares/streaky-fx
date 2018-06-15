@@ -8,7 +8,7 @@ export default class ThrottledButton extends React.Component {
     clickCount: 0
   };
 
-  handleClick = $fx.throttle(1000)(() =>
+  handleClick = $fx.throttle(this.props.throttleTime)(() =>
     this.setState(evolve({ clickCount: inc }))
   );
 
