@@ -78,7 +78,7 @@ export default class TVSearch extends React.Component {
       <div>
         <form id="search-form">
           <div className="form-group">
-            <label for="length">Search TV Shows</label>
+            <label htmlFor="length">Search TV Shows</label>
             <input
               className="form-control"
               id="search-input"
