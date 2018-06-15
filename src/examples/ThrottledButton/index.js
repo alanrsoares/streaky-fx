@@ -3,7 +3,15 @@ import { evolve, inc } from "ramda";
 
 import * as $fx from "../../StreakyFx";
 
-export default class ThrottledButton extends React.Component {
+interface Props {
+  throttleTime: number;
+}
+
+interface State {
+  clickCount: number;
+}
+
+export default class ThrottledButton extends React.Component<Props, State> {
   state = {
     clickCount: 0
   };

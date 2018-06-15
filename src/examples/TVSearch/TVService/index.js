@@ -5,7 +5,7 @@ const CACHE_PREFIX = "streaky-demo";
 export class TVService {
   baseUrl: string;
 
-  constructor(baseUrl: string = `https://api.tvmaze.com`) {
+  constructor(baseUrl: string = "https://api.tvmaze.com") {
     this.baseUrl = baseUrl;
   }
 
