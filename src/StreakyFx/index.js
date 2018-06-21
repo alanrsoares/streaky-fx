@@ -1,6 +1,5 @@
-export const map = (predicate: Event => any) => handler => {
-  return (event: Event) => handler(predicate(event));
-};
+export const map = (predicate: Event => any) => handler => (event: Event) =>
+  handler(predicate(event));
 
 export const filter = (predicate: Event => boolean) => handler => {
   let started = null;

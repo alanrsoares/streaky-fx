@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 
 import { compose, map, filter } from "ramda";
 
@@ -27,16 +27,21 @@ export default class TVSearch extends React.Component {
     isSearching: false
   };
 
+  clearSearch() {
+    this.setState({ isSearching: false, shows: [], searchTerm: "" });
+  }
+
   handleSearch = compose(
     $fx.debounce(500), // 500ms debounce
-    $fx.map(e => {
-      const term = e.target.value;
+    $fx.map((e: Event) => e.target.value),
+    $fx.map((term: string) => term.toLowerCase().trim()), // sanitization
+    $fx.map((term: string) => {
       if (!term && !this.state.isSearching) {
-        this.setState({ shows: [], searchTerm: "" });
+        this.clearSearch();
       }
       return term;
     }), // plucks the input value
-    $fx.filter(term => term.length >= 3) // rejects values with length 2 or less
+    $fx.filter((term: string) => term.length >= 3) // rejects values with length 2 or less
   )(searchTerm => {
     console.log(`searching "${searchTerm}"`);
 
